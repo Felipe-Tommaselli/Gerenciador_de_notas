@@ -6,9 +6,65 @@
 #include <stdbool.h>
 #include <math.h>
 
+typedef struct { 
+    char nome[15];
+    char sobrenome[15];
+    int nusp; 
+    float P1, P2, Tf; //prova 1, prova 2, trabalho final
+    float mf; //media final
+} aluno; 
+
+void limparBuffer(void){
+    char c;
+    while((c = getchar()) != '\n' && c != EOF);
+}
+
+void criar_turma(int *n_turmas, int *n_alunos){
+    
+    printf("\nNumero de turmas: "); scanf("%i", &*n_turmas);
+    printf("\nNumero de alunos: "); scanf("%i", &*n_alunos);
+}
+
+void info_alunos( aluno alunos[], int *n_turmas, int *n_alunos){
+    
+    for(int i=0; i<*n_alunos; i++){
+       
+        printf("\nNome: "); scanf("%s[^\n]", alunos[i].nome);
+        printf("\nSobrenome: "); scanf("%s[^\n]", alunos[i].sobrenome);
+        limparBuffer();
+        printf("\nNumero usp: "); scanf("%i", &alunos[i].nusp);
+        printf("\nNota da P1: "); scanf("%f", &alunos[i].P1);
+        printf("\nNota da P2: "); scanf("%f", &alunos[i].P2);
+        printf("\nNota do trabalho: "); scanf("%f", &alunos[i].Tf);
+        
+        alunos[i].mf= alunos[i].P1 + alunos[i].P2 + alunos[i].Tf;
+        alunos[i].mf= alunos[i].mf/3;
+    }
+}
+
+void printa( aluno alunos[], int *n_turmas, int *n_alunos){
+
+    for(int i=0; i<*n_alunos; i++){
+
+        printf("\nNome: %s", alunos[i].nome);
+        printf("\nSobrenome: %s", alunos[i].sobrenome);
+        printf("\nNumero usp: %i",  alunos[i].nusp);
+        printf("\nNota da P1: %.2f", alunos[i].P1);
+        printf("\nNota da P2: %.2f", alunos[i].P2);
+        printf("\nNota do trabalho: %.2f", alunos[i].Tf);
+        printf("\nMedia final: %.2f", alunos[i].mf); printf("\n");
+    }
+}
 
 int main(int argc, char *argv[]){
 
-
+    int n_turmas;
+    int n_alunos, i=0;
+    criar_turma(&n_turmas, &n_alunos);
+    aluno alunos[n_alunos];
+    info_alunos( alunos, &n_turmas, &n_alunos);
+    printa( alunos, &n_turmas, &n_alunos);
+    
+    
 return 0; 
 }
