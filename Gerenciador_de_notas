@@ -56,6 +56,17 @@ void printa( aluno alunos[], int *n_turmas, int *n_alunos){
     }
 }
 
+void salvar_file(int *n_turmas){
+    
+    typedef struct {char nome[15];} tipo_nome; 
+    tipo_nome nome_file[*n_turmas];
+    for(int i= 0; i< n_turmas; i++){
+        printf("\nDigite o nome do arquivo #%i para armazenar as informações dos alunos: ", i); scanf("%s", nome_file);
+        FILE *file= fopen(nome_file, "w");
+        //fwrite();
+    }
+}
+
 int main(int argc, char *argv[]){
 
     int n_turmas;
