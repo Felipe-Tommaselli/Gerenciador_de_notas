@@ -19,7 +19,7 @@ void limparBuffer(void){
     while((c = getchar()) != '\n' && c != EOF);
 }
 
-void menu( int *n_alunos){
+void menu(){
 
     printf("\n ------------------------------");
     printf("\n|             MENU             |");
@@ -31,127 +31,118 @@ void menu( int *n_alunos){
     printf("\n > 5. Encerrar\n");
 }
 
-void realiza_acao( int *acao){
-
-    printf("\nDigite a acao que deseja realizar: "); scanf("%d", *&acao);
-}
-
 void criar_turma( int *n_alunos){
 
     printf("\nNumero de alunos: "); scanf("%i", &*n_alunos);
 }
 
-void menorq10(float *nota){
-    if(*nota>10 && nota<0){
-        printf("\nO numero digitado é invalido\ntente novamente:");
-        *nota= -1;
-    }
-}
-
-void aloc_din_aluno( int n_alunos){
-
-    aluno *alunos= (aluno *)calloc(n_alunos, sizeof( aluno));
-    return *alunos;
-}
-
-void info_alunos( aluno *alunos, int *n_alunos){
+void info_alunos( aluno **turmas, int n_alunos, int marcador){
     
-    for(int i=0; i<*n_alunos; i++){
+    for(int i=0; i<n_alunos; i++){
         
         printf("\nAluno %i\n", i);
         
-        printf("\nNome: "); scanf("%s[^\n]", (alunos[i].nome));
-        printf("\nSobrenome: "); scanf("%s[^\n]", alunos[i].sobrenome);
+        printf("\nNome: "); scanf("%s[^\n]", (turmas[marcador][i].nome));
+        printf("\nSobrenome: "); scanf("%s[^\n]", turmas[marcador][i].sobrenome);
         limparBuffer();
-        printf("\nNumero usp: "); scanf("%i", &(alunos[i].nusp));
-        printf("\nNota da P1: "); scanf("%f", &(alunos[i].P1));
-        //menorq10(&alunos[i].P1); 
-        printf("\nNota da P2: "); scanf("%f", &(alunos[i].P2));
-        printf("\nNota do trabalho: "); scanf("%f", &(alunos[i].Tf));
+        printf("\nNumero usp: "); scanf("%i", &(turmas[marcador][i].nusp));
+        printf("\nNota da P1: "); scanf("%f", &(turmas[marcador][i].P1));
+        //menorq10(&turmas[i].P1); 
+        printf("\nNota da P2: "); scanf("%f", &(turmas[marcador][i].P2));
+        printf("\nNota do trabalho: "); scanf("%f", &(turmas[marcador][i].Tf));
         
-        alunos[i].mf= alunos[i].P1 + alunos[i].P2 + alunos[i].Tf;
-        alunos[i].mf= alunos[i].mf/3;
+        turmas[marcador][i].mf= turmas[marcador][i].P1 + turmas[marcador][i].P2 + turmas[marcador][i].Tf;
+        turmas[marcador][i].mf= turmas[marcador][i].mf/3;
     }
 }
 
-void printa( aluno *alunos, int i){
+void printa( aluno **turmas, int i, int aux){
+
         system("clear");
-        printf("\nNome: %s", alunos[i].nome);
-        printf("\nSobrenome: %s", alunos[i].sobrenome);
-        printf("\nNumero usp: %i",  alunos[i].nusp);
-        printf("\nNota da P1: %.2f", alunos[i].P1);
-        printf("\nNota da P2: %.2f", alunos[i].P2);
-        printf("\nNota do trabalho: %.2f", alunos[i].Tf);
-        printf("\nMedia final: %.2f", alunos[i].mf); printf("\n");
-        alunos[i].mf>= 5? printf("\nO aluno passou com media final %f", alunos[i].mf) : printf("\nO aluno NAO passou! A media final foi de %f", alunos[i].mf);
+        printf("\nAlnuno encontrado!!");
+        printf("\nNome: %s", turmas[aux][i].nome);
+        printf("\nSobrenome: %s", turmas[aux][i].sobrenome);
+        printf("\nNumero usp: %i",  turmas[aux][i].nusp);
+        printf("\nNota da P1: %.2f", turmas[aux][i].P1);
+        printf("\nNota da P2: %.2f", turmas[aux][i].P2);
+        printf("\nNota do trabalho: %.2f", turmas[aux][i].Tf);
+        printf("\nMedia final: %.2f", turmas[aux][i].mf); printf("\n");
+        turmas[aux][i].mf>= 5? printf("\nO aluno passou com media final %.2f", turmas[aux][i].mf) : printf("\nO aluno NAO passou! A media final foi de %.2f", turmas[aux][i].mf);
 }
 
-int procura_aluno_rec( aluno *alunos, int pos, int n_alunos, char nome_proc[], char sobrenome_proc[]){
+int procura_aluno_rec( aluno **turmas, int pos, int n_alunos, char nome_proc[], char sobrenome_proc[], int i){
     
-    if(pos >n_alunos){
-        printf("\nAluno não encontrado");
+    if(pos >n_alunos)
         return -1;
-    }
-    if(strcmp(nome_proc, alunos[pos].nome)==0){
-        if(strcmp(sobrenome_proc, alunos[pos].sobrenome)==0){
+
+    if(strcmp(nome_proc, turmas[i][pos].nome)==0){
+        if(strcmp(sobrenome_proc, turmas[i][pos].sobrenome)==0){
             printf("\nAluno Enconrado com sucesso: ");
             return pos; 
         } else{
             pos= pos + 1;
-            procura_aluno_rec(alunos, pos, n_alunos, nome_proc, sobrenome_proc);
+            procura_aluno_rec(turmas, pos, n_alunos, nome_proc, sobrenome_proc, i);
         }
     } else{
         pos= pos + 1;
-        procura_aluno_rec(alunos, pos, n_alunos, nome_proc, sobrenome_proc);
+        procura_aluno_rec(turmas, pos, n_alunos, nome_proc, sobrenome_proc, i);
     }
 }
 
-void procura_aluno_base( aluno *alunos, int *n_alunos){
+void procura_aluno_base( aluno **turmas, int n_alunos, int marcador){
     char nome_proc[15], sobrenome_proc[15];
     int pos=0;
+    int aux=0;
     //system("clear");
         
     printf("\nDigite o nome do aluno procurado: "); scanf("%s[^\n]", nome_proc);
     printf("\nSobrenome: "); scanf("%s[^\n]", sobrenome_proc);
-        
-    pos= procura_aluno_rec(alunos, pos, n_alunos, nome_proc, sobrenome_proc);
-    pos== -1? printf("\nvish... vamo ter que comecar a busca dnv\n") : printa( alunos, pos);
+
+    for(int i=0; i<marcador; i++){    
+        pos= procura_aluno_rec(turmas, pos, n_alunos, nome_proc, sobrenome_proc, i);
+        if(pos!= -1){
+            aux= i;
+            i=marcador;
+        }
+    }
+    pos== -1? printf("\nvish... vamo ter que comecar a busca dnv\n") : printa( turmas, pos, aux);
 }
 
-void estats( aluno *alunos, int *n_alunos){
+void estats( aluno *turmas, int n_alunos){
     
     int l_turmas, c_info;
     //turmas| media P1 | media P2 | media trabalho | media final | % de aprovados
     float media_P1=0, media_P2=0, media_Tf=0, p_aprovados=0;
     int i=0;
     
-    while( i<*n_alunos){
-        media_P1= media_P1 + alunos[i].P1;
+    while( i<n_alunos){
+        media_P1= media_P1 + turmas[i].P1;
         i++;
     } i=0;
-    media_P1= (media_P1)/(*n_alunos);
+    media_P1= (media_P1)/(n_alunos);
 
-    while( i<*n_alunos){
-        media_P2= media_P2 + alunos[i].P2;
+    while( i<n_alunos){
+        media_P2= media_P2 + turmas[i].P2;
         i++;
     } i=0; 
-    media_P2= (media_P2)/(*n_alunos);
+    media_P2= (media_P2)/(n_alunos);
 
-    while( i<*n_alunos){
-        media_Tf= media_Tf + alunos[i].Tf;
+    while( i<n_alunos){
+        media_Tf= media_Tf + turmas[i].Tf;
         i++;
     } i=0; 
-    media_Tf= (media_Tf)/(*n_alunos);
+    media_Tf= (media_Tf)/(n_alunos);
 
-    while( i<*n_alunos){
-        alunos[i].mf > 4? (p_aprovados= p_aprovados+1) : (p_aprovados= p_aprovados+ 0); 
+    while( i<n_alunos){
+        turmas[i].mf > 4? (p_aprovados= p_aprovados+1) : (p_aprovados= p_aprovados+ 0); 
         i++;
     } i=0;
-    p_aprovados= (p_aprovados)/(*n_alunos);
+    p_aprovados= (p_aprovados)/(n_alunos);
 
+    //funcao impementado em looping para diferents turmasno arquivo "teste_gerenciador.c" copiar e colar dps
     printf("\nturmas| media P1 | media P2 | media trabalho | media final | porcentagem de aprovados");
-    while(i<*n_alunos){ //MUDAR PRA NUMERO DE TURMAS
-        printf("\n  %i   |   %.2f  |    %.2f   |      %.2f     |     %.2f     |      %.2f    ", i, media_P1, media_P2, media_Tf, alunos[i].mf, p_aprovados);
+    while(i<n_alunos){ //MUDAR PRA NUMERO DE TURMAS
+        printf("\n  %i   |   %.2f  |    %.2f   |      %.2f     |     %.2f     |      %.2f    ", i, media_P1, media_P2, media_Tf, turmas[i].mf, p_aprovados);
         i++;
     }
 }
@@ -161,56 +152,66 @@ void salvar_file(int *n_turmas){
     typedef struct {char nome[15];} tipo_nome; 
     tipo_nome nome_file[*n_turmas];
     for(int i= 0; i< n_turmas; i++){
-        printf("\nDigite o nome do arquivo #%i para armazenar as informações dos alunos: ", i); scanf("%s", nome_file);
+        printf("\nDigite o nome do arquivo #%i para armazenar as informações dos turmas: ", i); scanf("%s", nome_file);
         FILE *file= fopen(nome_file, "w");
+        //pronto no arquivo "teste_gerenciador.c" copiar e colar dps de terminar a separação de turmas
         //fwrite();
     }
 }
 
 int main(int argc, char *argv[]){
 
-    //aluno *turma[10];
-
     int n_alunos;
     int acao;
     int i=0;
-   
+    aluno **turmas= (aluno **)calloc( 10, sizeof(aluno)); 
+    for(i=0; i<10; i++)
+        turmas[i]= (aluno *)calloc( 10, sizeof(aluno));
+    int marcador=0;
+    
     while(1){
         
-        menu( &n_alunos);
-        realiza_acao( &acao);
+        menu();
+        printf("\nDigite a acao que deseja realizar: "); scanf("%d", &acao);
         
         switch (acao){
         
         case 1:    
+            
             system("clear");
             criar_turma( &n_alunos);
-            aluno *alunos= (aluno *)calloc(n_alunos, sizeof( aluno));
-            info_alunos( alunos, &n_alunos); 
+            //for(i=0; i<10; i++)
+            //    turmas[i]= (aluno *)realloc( turmas, sizeof(aluno)*n_alunos);
+            info_alunos( turmas, n_alunos, marcador); 
+            marcador++;
             break;
         case 2:    
             system("clear");
-            procura_aluno_base( alunos, n_alunos);
+            procura_aluno_base( turmas, n_alunos, marcador);
             break;
         case 3:  
             system("clear");
-            estats(alunos, &n_alunos);
+           // estats(turmas, &n_alunos);
             break;
         case 4:
             system("clear");   
-            printf("\n#4");
+            for(int i=0; i<10; i++){
+                for(int j=0; j<10; j++){
+                    printf(" %.1f ", turmas[i][j].P1);
+                } printf("\n");
+            }
             break;
         case 5:    
             system("clear");
-            free(alunos);
+            for(int f=0; f<n_alunos; f++)
+                free(turmas[f]);
+            free(turmas);
             exit(0);
             break;
         default:
             break;
         }
-        aluno **turmas= (aluno *)malloc(sizeof(aluno));
         
-        //aluno *alunos= (aluno *)calloc(n_alunos, sizeof( aluno));
     }
 
     printf("\n\n");
