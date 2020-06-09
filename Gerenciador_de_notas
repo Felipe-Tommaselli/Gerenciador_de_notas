@@ -56,18 +56,18 @@ void info_alunos( aluno **turmas, int n_alunos, int marcador){
     }
 }
 
-void printa( aluno **turmas, int i, int aux){
+void printa( aluno **turmas, int coluna, int linha){
 
         system("clear");
         printf("\nAlnuno encontrado!!");
-        printf("\nNome: %s", turmas[aux][i].nome);
-        printf("\nSobrenome: %s", turmas[aux][i].sobrenome);
-        printf("\nNumero usp: %i",  turmas[aux][i].nusp);
-        printf("\nNota da P1: %.2f", turmas[aux][i].P1);
-        printf("\nNota da P2: %.2f", turmas[aux][i].P2);
-        printf("\nNota do trabalho: %.2f", turmas[aux][i].Tf);
-        printf("\nMedia final: %.2f", turmas[aux][i].mf); printf("\n");
-        turmas[aux][i].mf>= 5? printf("\nO aluno passou com media final %.2f", turmas[aux][i].mf) : printf("\nO aluno NAO passou! A media final foi de %.2f", turmas[aux][i].mf);
+        printf("\nNome: %s", turmas[linha][coluna].nome);
+        printf("\nSobrenome: %s", turmas[linha][coluna].sobrenome);
+        printf("\nNumero usp: %i",  turmas[linha][coluna].nusp);
+        printf("\nNota da P1: %.2f", turmas[linha][coluna].P1);
+        printf("\nNota da P2: %.2f", turmas[linha][coluna].P2);
+        printf("\nNota do trabalho: %.2f", turmas[linha][coluna].Tf);
+        printf("\nMedia final: %.2f", turmas[linha][coluna].mf); printf("\n");
+        turmas[linha][coluna].mf>= 5? printf("\nO aluno passou com media final %.2f", turmas[linha][coluna].mf) : printf("\nO aluno NAO passou! A media final foi de %.2f", turmas[linha][coluna].mf);
 }
 
 int procura_aluno_rec( aluno **turmas, int pos, int n_alunos, char nome_proc[], char sobrenome_proc[], int i){
@@ -78,7 +78,7 @@ int procura_aluno_rec( aluno **turmas, int pos, int n_alunos, char nome_proc[], 
     if(strcmp(nome_proc, turmas[i][pos].nome)==0){
         if(strcmp(sobrenome_proc, turmas[i][pos].sobrenome)==0){
             printf("\nAluno Enconrado com sucesso: ");
-            return pos; 
+            return pos;
         } else{
             pos= pos + 1;
             procura_aluno_rec(turmas, pos, n_alunos, nome_proc, sobrenome_proc, i);
@@ -177,7 +177,6 @@ int main(int argc, char *argv[]){
         switch (acao){
         
         case 1:    
-            
             system("clear");
             criar_turma( &n_alunos);
             //for(i=0; i<10; i++)
