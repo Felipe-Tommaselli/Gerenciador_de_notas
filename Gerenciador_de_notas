@@ -218,7 +218,7 @@ void estats( aluno **turmas, int n_alunos[], int n_turmas){
 }
 
 void salvar_file(){
-    //Gian que ta fzd
+    
     }
 
 int main(int argc, char *argv[]){
