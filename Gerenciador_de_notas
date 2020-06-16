@@ -47,21 +47,26 @@ void bubblesort(int *a, int *b){
 
 void realloc_turmas(aluno **turmas, int ordena_n_alunos[], int n_alunos[]){
      
-     int i=0;
-     while(i<10){
-                ordena_n_alunos[i]= n_alunos[i];
-                i++;
-            }i=0;
+    int i=0;
+    while(i<10){
+        ordena_n_alunos[i]= n_alunos[i];
+        i++;
+    }i=0;
 
-            while(i<10){	
-                for (int j=0; j<9-i; j++)
-                    bubblesort(&(ordena_n_alunos[j]), &(ordena_n_alunos[j+1]));
-                i++;
-            } i=0;
-            while(i<10){
-                turmas[i]= (aluno *)realloc( turmas[i], (ordena_n_alunos[9])*sizeof(aluno));
-                i++;
-            } i=0;
+    while(i<10){	
+        for (int j=0; j<9-i; j++)
+            bubblesort(&(ordena_n_alunos[j]), &(ordena_n_alunos[j+1]));
+        i++;
+    } i=0;
+    
+    /*         |turma 1 | turma 2 | turma 3 | turma 4 |    |turma 10 |
+    -------------------------------------------------- ... 
+    | n_alunos |menor nº|         |         |         |    | maior n°|
+    */
+    while(i<10){
+        turmas[i]= (aluno *)realloc( turmas[i], (ordena_n_alunos[9])*sizeof(aluno));
+        i++;
+    } i=0;
 
 }
 
@@ -89,7 +94,6 @@ void info_alunos( aluno **turmas, int n_alunos[], int n_turmas){
 void printa( aluno **turmas, int coluna, int linha){
 
         system("clear");
-        printf("\nAlnuno encontrado!!");
         printf("\nNome: %s", turmas[linha][coluna].nome);
         printf("\nSobrenome: %s", turmas[linha][coluna].sobrenome);
         printf("\nNumero usp: %i",  turmas[linha][coluna].nusp);
@@ -142,16 +146,11 @@ void procura_aluno_base( aluno **turmas, int n_alunos[], int n_turmas){
     col== -1? printf("\nvish... vamo ter que comecar a busca dnv\n") : printa( turmas, col, lin);
 }
 
-void estats( aluno **turmas, int n_alunos[], int n_turmas){
+void estats( aluno **turmas, int n_alunos[], int n_turmas,float  **matriz){
     
     int i=0, j=0;
     char c= '%';
-    float **matriz= (float **)calloc(10, sizeof(float));
-    while(i<10){
-        matriz[i]= (float *)calloc( 5, sizeof(float));  
-        i++;
-    } i=0;
-    
+
     while(i<10){
         while(j<5){
             matriz[i][j]=0;
@@ -214,7 +213,6 @@ void estats( aluno **turmas, int n_alunos[], int n_turmas){
     //for(int f=0; f<n_turmas; f++)
     //    free(matriz[f]);
     //free(matriz);    
-    
 }
 
 void salvar_file(){
@@ -223,25 +221,28 @@ void salvar_file(){
 
 int main(int argc, char *argv[]){
 
-   
     int acao=0;
     int i=0;
     int n_turmas=0;
 
-    //int *n_alunos= ( int *)malloc(10*sizeof(int));
-    int n_alunos[10]={0,0,0,0,0,0,0,0,0,0};
+    int *n_alunos= ( int *)malloc(10*sizeof(int));
     
      /*        |turma 1 | turma 2 | turma 3 | turma 4 | turma 5 | turma 6 | ...
     ---------------------------------------------------------------------
-    n_alunos = |        |         |         |        |         |         |
+    n_alunos = |        |         |         |         |         |         |
     */
-    int ordena_n_alunos[10]={0,0,0,0,0,0,0,0,0,0};
+    
+    int *ordena_n_alunos= ( int *)malloc(10*sizeof(int));
     // ordena do tipo >> 3 4 2 1 5 em 1 2 3 4 5
 
     aluno **turmas= (aluno **)calloc( 10, sizeof(aluno*)); 
-    for(i=0; i<10; i++)
+    while(i<10){
         turmas[i]= (aluno *)calloc( 10, sizeof(aluno));
-    i=0;
+        n_alunos[i]= 0;
+        ordena_n_alunos[i]= 0;
+        i++;
+    } i=0;
+
        /*     |aluno 1 | aluno 2 | aluno 3 |aluno 4 | aluno 5 | aluno 6 | ...
     ---------------------------------------------------------------------
     turma 1 = |        |         |         |        |         |         |
@@ -250,6 +251,12 @@ int main(int argc, char *argv[]){
     turma 4 = |        |         |         |        |         |         |
     ...
     */
+
+    float **matriz= (float **)calloc(10, sizeof(float));
+    while(i<10){
+        matriz[i]= (float *)calloc( 5, sizeof(float));  
+        i++;
+    } i=0;
     
     while(1){
         
@@ -271,23 +278,23 @@ int main(int argc, char *argv[]){
             break;
         case 3:  
             system("clear");
-            estats(turmas, n_alunos, n_turmas);
+            estats(turmas, n_alunos, n_turmas, matriz);
             break;
         case 4:
             system("clear");   
-            for(int i=0; i<10; i++){
-                for(int j=0; j<10; j++){
-                    printf(" %.1f ", turmas[i][j].P1);
-                } printf("\n");
-            }
+            //salvar();
             break;
         case 5:    
             system("clear");
             printf("\nEncerrando o sistema...\n");
-            for(int f=0; f<n_turmas; f++)
+            for(int f=0; f<n_turmas; f++){
                 free(turmas[f]);
+                free(matriz[f]);
+            }
             free(turmas);
-            //free(n_alunos);
+            free(matriz);
+            free(n_alunos);
+            free(ordena_n_alunos);
             exit(0);
             break;
         default:
@@ -295,4 +302,8 @@ int main(int argc, char *argv[]){
         }
     }
 return 0; 
+}
+
+void jo_miranha(){
+
 }
