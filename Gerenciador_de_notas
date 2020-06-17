@@ -272,12 +272,12 @@ void salvar(int *n_alunos, aluno **turmas, int n_turmas, float **estat){
     FILE *arquivo;
     FILE *binario;
     char nome[32];
-    int w = 0;
+    int i = 0, j=0;
     int bin;
 
-    while(w < n_turmas){
+    while(i < n_turmas){
 
-        printf("\nDigite o nome do arquivo texto que voce deseja salvar a turma #%d", w);
+        printf("\nDigite o nome do arquivo texto que voce deseja salvar a turma #%d: ", i);
         scanf("%s", nome);
         arquivo = fopen(nome, "wt");
         binario = fopen("estat.bin", "rb");
@@ -287,14 +287,21 @@ void salvar(int *n_alunos, aluno **turmas, int n_turmas, float **estat){
             exit(0);
         }
         
-        for(int i = 0; i < n_turmas; i++){
-            for(int j = 0; i < n_alunos[i]; j++){
-                fprintf(arquivo, "%s%s", turmas[i][j].nome);
-                bin = fwrite(*turmas, sizeof(aluno), n_alunos[i], binario);
-          }
-        }
+        while(j<n_alunos[i]){
+            fprintf(arquivo, "%s%s", turmas[i][j].nome);
+            printf("\nSalvando arquivo txt");
+            j++;
+        } j=0;
+        
+        while(j<5){
+            fprintf(binario, "%s%s", estat[i][j]);
+            printf("\nSalvando arquivo bin");
+            j++;
+        } j=0;
+        fputc('\n', binario);
         fclose(arquivo);
         fclose(binario);
+        i++;
     }        
 }
 
