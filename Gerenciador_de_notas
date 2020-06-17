@@ -36,6 +36,7 @@ void Entrar(){
     printf("\n\t\t\tBEM VINDO AO JUPITERWEB\n");
     printf("\nEscolha dentre as opções:");
     printf("\n1. Sou Aluno da graduação\n2. Sou Aluno da pós-graduação\n3. Sou professor/ doscente\n"); 
+    printf("\n>> ");
     scanf("%d", &indice);
 
     switch(indice){
@@ -124,9 +125,10 @@ void realloc_turmas(aluno **turmas, int ordena_n_alunos[], int n_alunos[]){
 
 void info_alunos( aluno **turmas, int n_alunos[], int n_turmas){
     
+    system("clear");
     for(int i=0; i<n_alunos[n_turmas]; i++){
         
-        printf("\nAluno %i\n", i);
+        printf("\nAluno %i\n", i+1);
         
         printf("\nNome: "); scanf("%s[^\n]", (turmas[n_turmas][i].nome));
         printf("\nSobrenome: "); scanf("%s[^\n]", turmas[n_turmas][i].sobrenome);
@@ -154,6 +156,7 @@ void printa( aluno **turmas, int coluna, int linha){
         printf("\nNota do trabalho: %.2f", turmas[linha][coluna].Tf);
         printf("\nMedia final: %.2f", turmas[linha][coluna].mf); printf("\n");
         turmas[linha][coluna].mf>= 5? printf("\nO aluno passou com media final %.2f", turmas[linha][coluna].mf) : printf("\nO aluno NAO passou! A media final foi de %.2f", turmas[linha][coluna].mf);
+
 }
 
 int procura_aluno_rec( aluno **turmas, int col, int n_alunos[], char nome_proc[], char sobrenome_proc[],  int i){
@@ -196,6 +199,12 @@ void procura_aluno_base( aluno **turmas, int n_alunos[], int n_turmas){
         }
     }
     col== -1? printf("\nvish... vamo ter que comecar a busca dnv\n") : printa( turmas, col, lin);
+
+    lin = 0;
+    printf("\n\nDigite \"1\" para voltar ao menu: ");
+    while(lin != 1)
+        scanf("%d", &lin);
+    system("clear");
 }
 
 void estats( aluno **turmas, int n_alunos[], int n_turmas,float  **matriz){
@@ -261,10 +270,13 @@ void estats( aluno **turmas, int n_alunos[], int n_turmas,float  **matriz){
             printf("\n|turma %i = |   %.1f    |   %.1f    |      %.1f       |    %.1f      |         %.1f%c           |", i+1, matriz[i][0], matriz[i][1], matriz[i][2], matriz[i][3], matriz[i][4], c);
    
     i++;
-    }
-    //for(int f=0; f<n_turmas; f++)
-    //    free(matriz[f]);
-    //free(matriz);    
+    } i=0;
+    
+    printf("\n\nDigite \"1\" para voltar ao menu: ");
+    
+    while(i != 1)
+        scanf("%d", &i);
+    system("clear");
 }
 
 void salvar(int *n_alunos, aluno **turmas, int n_turmas, float **estat){
@@ -280,7 +292,7 @@ void salvar(int *n_alunos, aluno **turmas, int n_turmas, float **estat){
         printf("\nDigite o nome do arquivo texto que voce deseja salvar a turma #%d: ", i);
         scanf("%s", nome);
         arquivo = fopen(nome, "wt");
-        binario = fopen("estat.bin", "rb");
+        binario = fopen("estat.bin", "wb");
 
         if(arquivo == NULL){
             printf("Ocorreu um erro ao abrir o arquivo! Tente novamente.");
@@ -288,17 +300,17 @@ void salvar(int *n_alunos, aluno **turmas, int n_turmas, float **estat){
         }
         
         while(j<n_alunos[i]){
-            fprintf(arquivo, "%s%s", turmas[i][j].nome);
+            fprintf(arquivo, "%s%s", turmas[i][j].nome, turmas[i][j].sobrenome);
             printf("\nSalvando arquivo txt");
             j++;
         } j=0;
         
         while(j<5){
-            fprintf(binario, "%s%s", estat[i][j]);
+            fprintf(binario, "%.2f", estat[i][j]);
             printf("\nSalvando arquivo bin");
             j++;
         } j=0;
-        fputc('\n', binario);
+
         fclose(arquivo);
         fclose(binario);
         i++;
@@ -378,10 +390,10 @@ int main(int argc, char *argv[]){
             printf("\nEncerrando o sistema...\n");
             for(int f=0; f<n_turmas; f++){
                 free(turmas[f]);
-                //free(matriz[f]);
+                free(matriz[f]);
             }
             free(turmas);
-            //free(matriz);
+            free(matriz);
             free(n_alunos);
             free(ordena_n_alunos);
             exit(0);
