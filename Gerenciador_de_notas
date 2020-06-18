@@ -133,7 +133,7 @@ void info_alunos( aluno **turmas, int n_alunos[], int n_turmas){
         printf("\nNome: "); scanf("%s[^\n]", (turmas[n_turmas][i].nome));
         printf("\nSobrenome: "); scanf("%s[^\n]", turmas[n_turmas][i].sobrenome);
         limparBuffer();
-        printf("\nNumero usp: "); scanf("%i", &(turmas[n_turmas][i].nusp));
+        printf("\nNumero usp: "); scanf("%d", &(turmas[n_turmas][i].nusp));
         printf("\nNota da P1: "); scanf("%f", &(turmas[n_turmas][i].P1));
         printf("\nNota da P2: "); scanf("%f", &(turmas[n_turmas][i].P2));
         printf("\nNota do trabalho: "); scanf("%f", &(turmas[n_turmas][i].Tf));
@@ -300,8 +300,7 @@ void salvar(int *n_alunos, aluno **turmas, int n_turmas, float **estat){
         }
         
         while(j<n_alunos[i]){
-            fprintf(arquivo, "%s%s", turmas[i][j].nome, turmas[i][j].sobrenome);
-            printf("\nSalvando arquivo txt");
+            fprintf(arquivo, "nome: %s\nsobrenome: %s\nnusp: %d\nP1: %.2f\nP2: %.2f\nTf: %.2f\nmf: %.2f\n", turmas[i][j].nome, turmas[i][j].sobrenome, turmas[i][j].nusp, turmas[i][j].P1, turmas[i][j].P2, turmas[i][j].Tf, turmas[i][j].mf);
             j++;
         } j=0;
         
