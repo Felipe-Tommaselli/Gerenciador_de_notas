@@ -1,4 +1,5 @@
 #include <stdio.h>
+#i#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -12,14 +13,17 @@ typedef struct {
     int nusp; 
     float P1, P2, Tf; //prova 1, prova 2, trabalho final
     float mf; //media final
-} aluno; 
+} aluno; //tipo aluno com caracterisitcas de struct
 void jo_miranha();
-void limparBuffer(void){
+void limparBuffer(void){ //limpa o buffer
     char c;
     while((c = getchar()) != '\n' && c != EOF);
 }
 
 void Entrar(){
+    
+    //interface com o jupiterWeb, pedindo senha e usuario para realizar as ações do programa
+    //as informações dadas na verdade não sao usadas durante o programa
 
     int nusp;
     char senha[10], senha2[10];
@@ -65,6 +69,8 @@ void Entrar(){
 
 void menu(){
 
+    //essa funcao monta o menu que é repetido em looping
+    //apenas printa na tela
     char c1= ')', c2= '(';
     printf("\n     _                   _   _                  __        __         _            ");
     printf("\n    | |  _   _   _ __   %c_%c | |_    ___   _ __  \\ \\      / /   ___  | |__       ", c2, c1);
@@ -86,12 +92,16 @@ void menu(){
 
 void criar_turma( int n_alunos[], int n_turmas){
 
+    //essa funcao serve apenas para pedir ao usuario o numero de alunos daquela turma
     printf("\nNumero de alunos: "); scanf("%i", &n_alunos[n_turmas]);
 }
 
 void bubblesort(int *a, int *b){
-	int aux; 
-	if(*a>*b){	//no bubblesort, se um eh maior que o outro a gente inverte as posicoes
+	
+    //no bubblesort, se um numero é maior que o proximo numero do vetor inverte-se as posicoes, caso contrario nada é feito
+    // essa funcao precisa ser rodada em 2 looping para percorrer todo o vetor até que ele esteja completamente ordenado
+    int aux; 
+	if(*a>*b){	
 		aux= *a;   
 		*a= *b;
 		*b= aux;
@@ -99,12 +109,20 @@ void bubblesort(int *a, int *b){
 }
 
 void realloc_turmas(aluno **turmas, int ordena_n_alunos[], int n_alunos[]){
-     
+    
+    /*O objetivo dessa funcao é garantir que o usuario possar digitar o numero de alunos que desejasse, e caso esse numero 
+    seja pequeno, não haja perda de memoria. Nesse contexto, foi ordenado por meio do vetor ordena_n_alunos pela funcao
+    bubblesort, em que a ultima posição esta o maior numero de alunos de todas as turmas. Assim realoca-se o numero de colunas
+    (de alunos) da matriz **turmas, para que o ultimo numero de ordena_n_alunos seja seu novo numero de colunas.
+    */
     int i=0;
     while(i<10){
         ordena_n_alunos[i]= n_alunos[i];
         i++;
     }i=0;
+    //nesse passo é copiado os valores de n_alunos para ordena_n_alunos, pois necessitamos do vetor n_alunos intacto
+    //uma vez que ele esta organizado, convenientemente, pelas turmas 
+
 
     while(i<10){	
         for (int j=0; j<9-i; j++)
@@ -113,18 +131,29 @@ void realloc_turmas(aluno **turmas, int ordena_n_alunos[], int n_alunos[]){
     } i=0;
     
     /*         |turma 1 | turma 2 | turma 3 | turma 4 |    |turma 10 |
-    -------------------------------------------------- ... 
+    -------------------------------------------------- ... -----------
     | n_alunos |menor nº|         |         |         |    | maior n°|
     */
     while(i<10){
         turmas[i]= (aluno *)realloc( turmas[i], (ordena_n_alunos[9])*sizeof(aluno));
         i++;
     } i=0;
-
+       /*     |aluno 1 | aluno 2 | aluno 3 | ... | aluno (maior nº de ordena_n_alunos) | 
+    ----------------------------------------      ----------
+    turma 1 = |        |         |         |     |         |
+    turma 2 = |        |         |         |     |         |
+    turma 3 = |        |         |         |     |         |
+    turma 4 = |        |         |         |     |         |
+    ...
+    turma 10= |        |         |         |     |         |
+    */
 }
 
 void info_alunos( aluno **turmas, int n_alunos[], int n_turmas){
     
+    // Essa funcao registra as informações dos alunos para a turma
+    //turmas[n_turmas][], n_turmas é o valor de turmas exigentes ate o momento, ou seja, a turma que deve ser cadastrada
+    //o ciclo for serve para rodar todos os alunos da turma
     system("clear");
     for(int i=0; i<n_alunos[n_turmas]; i++){
         
@@ -147,6 +176,7 @@ void info_alunos( aluno **turmas, int n_alunos[], int n_turmas){
 
 void printa( aluno **turmas, int coluna, int linha){
 
+        //funcao que printa as informacoe de determinado aluno, na linha e coluna especificadas
         system("clear");
         printf("\nNome: %s", turmas[linha][coluna].nome);
         printf("\nSobrenome: %s", turmas[linha][coluna].sobrenome);
@@ -161,6 +191,11 @@ void printa( aluno **turmas, int coluna, int linha){
 
 int procura_aluno_rec( aluno **turmas, int col, int n_alunos[], char nome_proc[], char sobrenome_proc[],  int i){
     
+    //essas funcao procura dentro de uma turma, o aluno desejado. Ela procura em 3 condiçoes principais, caso o col seja maior
+    //que o n_alunos, ou seja, nao foi encontrado o aluno desejad- retorna -1 e encerra a recursão
+    //caso o nome e o sobrenome sejam iguais ele retorna a coluna (o aluno) e para a recursão
+    //caso o nome e/ou sobrenome não sejam encontrados, ele adiciona mais um em col (pula para o proximo aluno) e chama o
+    //ciclo recursivo novamente, até que alguma condição de parada seja alcancada
     if(col >n_alunos[i]) 
         return -1;
 
@@ -180,6 +215,10 @@ int procura_aluno_rec( aluno **turmas, int col, int n_alunos[], char nome_proc[]
 
 void procura_aluno_base( aluno **turmas, int n_alunos[], int n_turmas){
    
+    //essa funcao garante que a main fique mais "limpa", e que seja possivel criar as strings de nome e sobrenome procurados
+    //dentro dessa função. A partir dessa função é chamado a função recursiva que procura aluno por aluno por aluno,
+    //conferindo em qual posição o aluno procurado esta (caso ele esteja em alguma turma), retornando a posição da coluna
+    //que ele se encontra. As linhas (turmas) são percorridas por um cico for
     char nome_proc[15], sobrenome_proc[15];
     int col=0;
     int lin=0;
@@ -198,17 +237,25 @@ void procura_aluno_base( aluno **turmas, int n_alunos[], int n_turmas){
             //i= n_turmas funcina como um exit(0) 
         }
     }
-    col== -1? printf("\nvish... vamo ter que comecar a busca dnv\n") : printa( turmas, col, lin);
+    col== -1? printf("\nvish... o aluno, infelizmente, não foi encontrado\n") : printa( turmas, col, lin);
+    //caso o aluno não seja encontrado (retorno de col== -1) ele printa apenas a mensagem acima e encerra a busca, 
+    //caso o aluno seja encontrado, ele printa as informaçẽos do aluno pra linha e coluna especificadas
 
-    lin = 0;
+    //para dar tempo do usuario visualizar as informações do aluno pelo tempo que necessitar, ele apenas tera que 
+    //digitar 1 para voltar ao menu
+    lin = 0; //reutilizacão da variavel para não ter que criar outra só para esse ciclo
     printf("\n\nDigite \"1\" para voltar ao menu: ");
     while(lin != 1)
         scanf("%d", &lin);
-    system("clear");
+    system("clear"); 
 }
 
 void estats( aluno **turmas, int n_alunos[], int n_turmas,float  **matriz){
     
+    //funcao que cria e printa as estatistica de cada turma, atraves da matriz com n_turmas nas linhas e as notas nas colunas
+    // atraves de um ciclo que roda as turmas, para caa turma roda-se um ciclo para somar as notas de cada avaliação e depois
+    //calcular a media dessa avaliação, a porcentagem de aprovados é somado 1 a cada aluno com media final >= 5
+    //depois é printado tais informções
     int i=0, j=0;
     char c= '%';
 
@@ -272,6 +319,7 @@ void estats( aluno **turmas, int n_alunos[], int n_turmas,float  **matriz){
     i++;
     } i=0;
     
+    //serve para deixar o usuario visualizar a tela pelo tempo que necessitar
     printf("\n\nDigite \"1\" para voltar ao menu: ");
     
     while(i != 1)
@@ -280,7 +328,10 @@ void estats( aluno **turmas, int n_alunos[], int n_turmas,float  **matriz){
 }
 
 void salvar(int *n_alunos, aluno **turmas, int n_turmas, float **estat){
-   
+    
+    //a funcao salvar, cria 2 arquivos, um texto e um binario
+    //no primeior armazena-se as informacoes de todos os alunos da turma (o usuario digita o nome do arqvo)
+    //na segunda armazena-se as estatisticas da turma em um arquivo binario
     FILE *arquivo;
     FILE *binario;
     char nome[32];
@@ -306,7 +357,6 @@ void salvar(int *n_alunos, aluno **turmas, int n_turmas, float **estat){
         
         while(j<5){
             fprintf(binario, "%.2f", estat[i][j]);
-            printf("\nSalvando arquivo bin");
             j++;
         } j=0;
 
@@ -318,10 +368,12 @@ void salvar(int *n_alunos, aluno **turmas, int n_turmas, float **estat){
 
 int main(int argc, char *argv[]){
 
+    //delcaração de variaveis
     int acao=0;
     int i=0;
     int n_turmas=0;
 
+    //declaração de vetores para o numero de alunos
     int *n_alunos= ( int *)malloc(10*sizeof(int));
     
      /*        |turma 1 | turma 2 | turma 3 | turma 4 | turma 5 | turma 6 | ...
@@ -332,6 +384,7 @@ int main(int argc, char *argv[]){
     int *ordena_n_alunos= ( int *)malloc(10*sizeof(int));
     // ordena do tipo >> 3 4 2 1 5 em 1 2 3 4 5
 
+    //matriz com as turmas 
     aluno **turmas= (aluno **)calloc( 10, sizeof(aluno*)); 
     while(i<10){
         turmas[i]= (aluno *)calloc( 10, sizeof(aluno));
@@ -349,41 +402,46 @@ int main(int argc, char *argv[]){
     ...
     */
 
+    //matriz para as estatisticas
     float **matriz= (float **)calloc(10, sizeof(float*));
     while(i<10){
         matriz[i]= (float *)calloc( 5, sizeof(float));  
         i++;
     } i=0;
     
-    Entrar();
+    Entrar(); //interface do JupiterWeb
 
-    while(1){    
+    /*O programa foi condensado em um switch na main (após as declarações) que chama as funcoes necessarias, a partir do quq
+    o usuario digitar como acao, baseado no menu
+
+    */
+    while(1){    //looping até o usuario pressionar 5
         
         menu();
         printf("\nDigite a acao que deseja realizar: "); scanf("%d", &acao);
         
         switch (acao){
         
-        case 1:    
+        case 1:    //criar uma nova turma
             system("clear");
             criar_turma( n_alunos, n_turmas);
             realloc_turmas( turmas, ordena_n_alunos, n_alunos);
             info_alunos( turmas, n_alunos, n_turmas);
             n_turmas++;
             break;
-        case 2:    
+        case 2:   //procurar um aluno
             system("clear");
             procura_aluno_base( turmas, n_alunos, n_turmas);
-            break;
-        case 3:  
+            break; 
+        case 3:    // gerar estatisticas de todas as turmas
             system("clear");
             estats(turmas, n_alunos, n_turmas, matriz);
             break;
-        case 4:
+        case 4:     // salvar o programa em um .txt e um .bin
             system("clear");   
             salvar(n_alunos, turmas, n_turmas, matriz);
             break;
-        case 5:    
+        case 5:     // fechar o programa
             system("clear");
             jo_miranha();
             printf("\nEncerrando o sistema...\n");
@@ -405,6 +463,8 @@ return 0;
 }
 
 void jo_miranha(){
+
+//dispensa comentarios...
 printf("\a\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t.........................................................................................................................................''''',,;:cloddxxxdoc:::c::;;;;;;;;;,,,,,'''''''''''''..............................................................................................................\n");
 printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t........................................................................................................................................''',,,;;:clodddddddoc::::::;;;;;;;;;,,,,,''''''''''''''..................................................................'..........................................\n");
 printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t..........................................................................................................................''...........'',,,,;;:clodddddddooc::;;;:;;;;;,;;;,,;,,,'''''''''''''..................................................................''.........................................\n");
