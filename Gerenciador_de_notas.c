@@ -1,5 +1,5 @@
 #include <stdio.h>
-#i#include <stdio.h>
+// include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -376,7 +376,7 @@ int main(int argc, char *argv[]){
     //declaração de vetores para o numero de alunos
     int *n_alunos= ( int *)malloc(10*sizeof(int));
     
-     /*        |turma 1 | turma 2 | turma 3 | turma 4 | turma 5 | turma 6 | ...
+    /*        |turma 1 | turma 2 | turma 3 | turma 4 | turma 5 | turma 6 | ...
     ---------------------------------------------------------------------
     n_alunos = |        |         |         |         |         |         |
     */
@@ -393,7 +393,7 @@ int main(int argc, char *argv[]){
         i++;
     } i=0;
 
-       /*     |aluno 1 | aluno 2 | aluno 3 |aluno 4 | aluno 5 | aluno 6 | ...
+    /*     |aluno 1 | aluno 2 | aluno 3 |aluno 4 | aluno 5 | aluno 6 | ...
     ---------------------------------------------------------------------
     turma 1 = |        |         |         |        |         |         |
     turma 2 = |        |         |         |        |         |         |
